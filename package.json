@@ -1,0 +1,7 @@
+{
+  "name": "moveinsync-playstore-pulse",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "start": "node server.js", "test": "node test.mjs" },
+  "dependencies": { "express": "^4.19.2", "google-play-scraper": "^10.0.0" }
+}

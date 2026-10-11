@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoveInSync PlayStore Pulse</title>
+  <meta name="description" content="Real-time dashboard for MoveInSync Google Play Store reviews — theme analysis, sentiment breakdown, and AI-powered chat." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #0d0f14;
+      --surface:     #161a23;
+      --surface2:    #1e2330;
+      --border:      #2a3045;
+      --accent:      #6c63ff;
+      --accent2:     #00cfb4;
+      --accent3:     #ff6b6b;
+      --accent4:     #ffc107;
+      --text:        #e8eaf6;
+      --text-muted:  #7b82a0;
+      --positive:    #00cfb4;
+      --neutral:     #ffc107;
+      --negative:    #ff6b6b;
+      --radius:      12px;
+      --shadow:      0 4px 32px rgba(0,0,0,.45);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1040 0%, #0d0f14 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .logo-mark {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 1.2rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 700; }
+    header span { font-size: .8rem; color: var(--text-muted); margin-left: 4px; }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
+    #fetchedAt { font-size: .75rem; color: var(--text-muted); }
+
+    /* ── Layout ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      margin-bottom: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+    .controls label { font-size: .8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .controls select, .controls input[type=number] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: .45rem .75rem;
+      font-size: .85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .controls select:focus, .controls input:focus { border-color: var(--accent); }
+    .btn {
+      padding: .5rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: .85rem;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), #9c56ff); color: #fff; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .stat-card.accent1::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .stat-card.accent2::before { background: linear-gradient(90deg, var(--positive), #00e5c8); }
+    .stat-card.accent3::before { background: linear-gradient(90deg, var(--negative), #ff9800); }
+    .stat-card.accent4::before { background: linear-gradient(90deg, var(--neutral), #ffeb3b); }
+    .stat-label { font-size: .75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+    .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+    .stat-sub { font-size: .75rem; color: var(--text-muted); margin-top: .35rem; }
+
+    /* ── Grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media(max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .panel-title {
+      font-size: .9rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .panel-title span { color: var(--text); }
+
+    /* ── Theme bars ── */
+    .theme-bar { margin-bottom: .85rem; }
+    .theme-bar-label { display: flex; justify-content: space-between; font-size: .8rem; margin-bottom: 4px; }
+    .theme-bar-track { background: var(--surface2); border-radius: 999px; height: 8px; overflow: hidden; }
+    .theme-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s ease; }
+
+    /* ── Sentiment donut ── */
+    #donutWrap { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    #donutSvg { flex-shrink: 0; }
+    .donut-legend { display: flex; flex-direction: column; gap: .6rem; }
+    .legend-item { display: flex; align-items: center; gap: .6rem; font-size: .82rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Rating distribution ── */
+    .rating-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .6rem; font-size: .8rem; }
+    .rating-row .star-label { width: 40px; color: var(--text-muted); }
+    .rating-row .bar-track { flex: 1; background: var(--surface2); border-radius: 999px; height: 7px; overflow: hidden; }
+    .rating-row .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent4), #ff9800); transition: width .6s ease; }
+    .rating-row .bar-count { width: 36px; text-align: right; color: var(--text-muted); }
+
+    /* ── Review cards ── */
+    .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .5rem; }
+    #reviewSearch {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      padding: .4rem .75rem; font-size: .82rem; font-family: inherit; outline: none; width: 220px;
+    }
+    #reviewSearch:focus { border-color: var(--accent); }
+    #reviewList { display: grid; gap: .85rem; max-height: 520px; overflow-y: auto; padding-right: 4px; }
+    #reviewList::-webkit-scrollbar { width: 5px; }
+    #reviewList::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    .review-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      transition: border-color .2s;
+    }
+    .review-card:hover { border-color: var(--accent); }
+    .review-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; margin-bottom: .5rem; }
+    .review-author { font-size: .82rem; font-weight: 600; }
+    .review-date { font-size: .72rem; color: var(--text-muted); }
+    .stars { color: var(--accent4); font-size: .8rem; }
+    .review-text { font-size: .8rem; color: #c5c9e0; line-height: 1.55; margin-bottom: .55rem; }
+    .review-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .tag {
+      font-size: .68rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 999px;
+      background: rgba(108,99,255,.18); color: var(--accent);
+      border: 1px solid rgba(108,99,255,.35);
+    }
+    .tag.positive { background: rgba(0,207,180,.12); color: var(--positive); border-color: rgba(0,207,180,.3); }
+    .tag.negative { background: rgba(255,107,107,.12); color: var(--negative); border-color: rgba(255,107,107,.3); }
+
+    /* ── Chat ── */
+    .chat-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(90deg, rgba(108,99,255,.15), rgba(0,207,180,.08));
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .chat-header-icon { font-size: 1.3rem; }
+    .chat-header h2 { font-size: .95rem; font-weight: 700; }
+    .chat-header p { font-size: .75rem; color: var(--text-muted); }
+    #chatMessages {
+      padding: 1.25rem 1.5rem;
+      height: 300px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    #chatMessages::-webkit-scrollbar { width: 4px; }
+    #chatMessages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    .msg { max-width: 80%; padding: .65rem 1rem; border-radius: 12px; font-size: .82rem; line-height: 1.5; }
+    .msg.user { background: linear-gradient(135deg, var(--accent), #9c56ff); color: #fff; align-self: flex-end; border-bottom-right-radius: 3px; }
+    .msg.bot  { background: var(--surface2); color: var(--text); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+    .msg.bot.typing { color: var(--text-muted); font-style: italic; }
+    .chat-input-row { display: flex; gap: .75rem; padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
+    #chatInput {
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); padding: .5rem .85rem;
+      font-size: .85rem; font-family: inherit; outline: none;
+      transition: border-color .2s;
+    }
+    #chatInput:focus { border-color: var(--accent); }
+    .quick-btns { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0 1.5rem .85rem; }
+    .quick-btn {
+      font-size: .72rem; padding: .3rem .7rem; border-radius: 999px;
+      background: rgba(108,99,255,.12); color: var(--accent);
+      border: 1px solid rgba(108,99,255,.3); cursor: pointer;
+      font-family: inherit; transition: background .2s;
+    }
+    .quick-btn:hover { background: rgba(108,99,255,.25); }
+
+    /* ── Download ── */
+    .download-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2rem; }
+
+    /* ── Empty / Loading ── */
+    .placeholder {
+      text-align: center; color: var(--text-muted);
+      padding: 3rem 1rem; font-size: .85rem;
+    }
+    .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ── */
+    @media(max-width: 600px) {
+      main { padding: 1rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">M</div>
+  <div>
+    <h1>MoveInSync PlayStore Pulse <span>com.moveinsync.ets</span></h1>
+  </div>
+  <div class="header-right">
+    <span id="fetchedAt"></span>
+  </div>
+</header>
+
+<main>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div>
+      <label for="numReviews">Reviews to fetch</label>
+      <input type="number" id="numReviews" value="200" min="10" max="500" step="10" style="width:90px" />
+    </div>
+    <div>
+      <label for="sortSelect">Sort by</label>
+      <select id="sortSelect">
+        <option value="newest">Newest</option>
+        <option value="rating">Rating</option>
+        <option value="helpfulness">Helpfulness</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:.5rem">
+      <button class="btn btn-primary" id="fetchBtn">⬇ Fetch Reviews</button>
+    </div>
+    <div id="fetchStatus" style="display:flex;align-items:flex-end;font-size:.8rem;color:var(--text-muted)"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card accent1">
+      <div class="stat-label">Overall Rating</div>
+      <div class="stat-value" id="statRating">—</div>
+      <div class="stat-sub" id="statRatingsTotal">Fetch reviews to populate</div>
+    </div>
+    <div class="stat-card accent2">
+      <div class="stat-label">Positive Reviews</div>
+      <div class="stat-value" id="statPositive">—</div>
+      <div class="stat-sub">4–5 ★</div>
+    </div>
+    <div class="stat-card accent3">
+      <div class="stat-label">Negative Reviews</div>
+      <div class="stat-value" id="statNegative">—</div>
+      <div class="stat-sub">1–2 ★</div>
+    </div>
+    <div class="stat-card accent4">
+      <div class="stat-label">Neutral Reviews</div>
+      <div class="stat-value" id="statNeutral">—</div>
+      <div class="stat-sub">3 ★</div>
+    </div>
+    <div class="stat-card accent1">
+      <div class="stat-label">Total Fetched</div>
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-sub">this session</div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="grid-2">
+    <!-- Theme breakdown -->
+    <div class="panel">
+      <div class="panel-title">🏷 <span>Top Themes</span></div>
+      <div id="themeChart"><div class="placeholder">Fetch reviews to see theme breakdown</div></div>
+    </div>
+
+    <!-- Sentiment donut -->
+    <div class="panel">
+      <div class="panel-title">😊 <span>Sentiment Distribution</span></div>
+      <div id="donutWrap">
+        <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="55" fill="none" stroke="var(--surface2)" stroke-width="22"/>
+          <circle id="donutPos" cx="70" cy="70" r="55" fill="none" stroke="var(--positive)" stroke-width="22"
+                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
+          <circle id="donutNeu" cx="70" cy="70" r="55" fill="none" stroke="var(--neutral)" stroke-width="22"
+                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
+          <circle id="donutNeg" cx="70" cy="70" r="55" fill="none" stroke="var(--negative)" stroke-width="22"
+                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
+          <text x="70" y="74" text-anchor="middle" fill="var(--text)" font-size="18" font-weight="800" font-family="Inter,sans-serif" id="donutCenter">—</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--positive)"></div><span id="legPos">Positive (4–5★): —</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--neutral)"></div><span id="legNeu">Neutral (3★): —</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--negative)"></div><span id="legNeg">Negative (1–2★): —</span></div>
+        </div>
+      </div>
+
+      <!-- Rating dist -->
+      <div style="margin-top:1.5rem">
+        <div class="panel-title" style="margin-bottom:.75rem">⭐ <span>Rating Distribution</span></div>
+        <div id="ratingDist"><div class="placeholder" style="padding:1rem">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download row -->
+  <div class="download-row">
+    <button class="btn btn-secondary" id="dlCSV" disabled>⬇ Download CSV</button>
+    <button class="btn btn-secondary" id="dlMD"  disabled>⬇ Download Report (.md)</button>
+  </div>
+
+  <!-- Chat -->
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="chat-header-icon">🤖</div>
+      <div>
+        <h2>Review Intelligence Chat</h2>
+        <p>Ask questions about the fetched reviews — themes, quotes, trends, recommendations</p>
+      </div>
+    </div>
+    <div id="chatMessages">
+      <div class="msg bot">👋 Hi! Fetch reviews first, then ask me anything — e.g. <em>"What do users complain about most?"</em></div>
+    </div>
+    <div class="quick-btns">
+      <button class="quick-btn" data-q="What is the top complaint?">Top complaint</button>
+      <button class="quick-btn" data-q="Show me positive highlights">Positive highlights</button>
+      <button class="quick-btn" data-q="What themes appear most?">Theme breakdown</button>
+      <button class="quick-btn" data-q="Give me 3 actionable recommendations for the product team">Recommendations</button>
+      <button class="quick-btn" data-q="What do users say about GPS or tracking?">GPS issues</button>
+      <button class="quick-btn" data-q="Summarise the most recent 10 reviews">Recent summary</button>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Ask about the reviews…" />
+      <button class="btn btn-primary" id="chatSend">Send</button>
+    </div>
+  </div>
+
+  <!-- Reviews list -->
+  <div class="panel">
+    <div class="reviews-header">
+      <div class="panel-title" style="margin:0">📋 <span>Review Explorer</span></div>
+      <input type="text" id="reviewSearch" placeholder="Search reviews…" />
+    </div>
+    <div id="reviewList"><div class="placeholder">No reviews yet — click "Fetch Reviews" above.</div></div>
+  </div>
+
+</main>
+
+<script src="analyze.js"></script>
+</body>
+</html>
