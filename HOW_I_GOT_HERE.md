@@ -31,6 +31,7 @@ See the Assumptions section at the bottom of this file.
 | Node.js v22 | Runtime |
 | Vanilla HTML / CSS / JS | Dashboard UI — no framework, no build step |
 | `node:test` | Built-in test runner for 18 offline unit tests |
+| Groq API (`openai/gpt-oss-120b`) | Hybrid Tier 2 LLM scanning unclassified reviews for emerging zero-day categories |
 | Google Gemini AI (Antigravity) | Coding assistant — helped write and iterate on server, dashboard, and analysis code |
 
 ---

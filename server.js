@@ -119,7 +119,10 @@ Format:
 
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-120b",
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: "You are an analytical assistant that classifies user reviews and outputs strictly valid JSON." },
+        { role: "user", content: prompt }
+      ],
       temperature: 0.2,
       max_tokens: 1024,
       response_format: { type: "json_object" },
