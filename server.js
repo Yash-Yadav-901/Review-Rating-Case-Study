@@ -167,4 +167,8 @@ app.get("/api/health", (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Pulse running at http://localhost:${port}`));
+if (!process.env.VERCEL) {
+  app.listen(port, () => console.log(`Pulse running at http://localhost:${port}`));
+}
+
+export default app;
