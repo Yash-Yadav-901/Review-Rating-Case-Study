@@ -76,3 +76,63 @@ export function answer(q, data, a) {
   }
   return "Try: top complaints · how are our ratings · which version is worst · reply rate · stars needed · or a keyword like \"gps\".";
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TIER 2: Hybrid LLM classification
+// ─────────────────────────────────────────────────────────────────────────────
+// Calls /api/llm-classify on the server (which uses Groq).
+// If the LLM is unavailable (rate limit, no key, network error) the response
+// carries { fallback: true } and we silently keep the regex categories — the
+// dashboard NEVER crashes regardless of LLM status.
+//
+// Usage (browser only):
+//   const result = await analyzeHybrid(data);
+//   result.llm        → array of dynamic LLM categories (empty if fallback)
+//   result.llmStatus  → "active" | "fallback" | "no-key"
+//   result.base       → the normal analyze() result (always present)
+// ─────────────────────────────────────────────────────────────────────────────
+export async function analyzeHybrid(data) {
+  // Tier 1: always run the fast regex classifier first
+  const base = analyze(data);
+
+  // Pull the reviews that landed in "Other" (not positive/negative-classified)
+  const otherLow = base.low.filter(r => r.theme === "Other");
+
+  if (!otherLow.length) {
+    return { base, llm: [], llmStatus: "not-needed", model: null };
+  }
+
+  try {
+    const resp = await fetch("/api/llm-classify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        reviews: otherLow.map(r => ({ score: r.score, text: r.text })),
+      }),
+    });
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+
+    if (json.fallback) {
+      return {
+        base,
+        llm: [],
+        llmStatus: json.reason?.includes("API_KEY") ? "no-key" : "fallback",
+        fallbackReason: json.reason,
+        model: null,
+      };
+    }
+
+    return {
+      base,
+      llm: json.categories || [],
+      llmStatus: "active",
+      model: json.model,
+      otherReviewsAnalysed: json.reviewsAnalysed,
+    };
+  } catch (e) {
+    // Network error or server not running — silent fallback
+    return { base, llm: [], llmStatus: "fallback", fallbackReason: e.message, model: null };
+  }
+}

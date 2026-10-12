@@ -263,6 +263,114 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ── LLM dynamic panel ── */
+    .llm-panel {
+      background: linear-gradient(135deg, rgba(108,99,255,.08), rgba(0,207,180,.05));
+      border: 1px solid rgba(108,99,255,.3);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .llm-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .68rem; font-weight: 700; letter-spacing: .06em;
+      padding: 3px 10px; border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .llm-badge.active   { background: rgba(0,207,180,.15); color: var(--accent2); border: 1px solid rgba(0,207,180,.4); }
+    .llm-badge.fallback { background: rgba(255,193,7,.12);  color: var(--neutral);  border: 1px solid rgba(255,193,7,.35); }
+    .llm-badge.no-key   { background: rgba(255,107,107,.1); color: var(--negative); border: 1px solid rgba(255,107,107,.3); }
+    .llm-badge.loading  { background: rgba(108,99,255,.12); color: var(--accent);   border: 1px solid rgba(108,99,255,.3); }
+    .llm-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1rem; margin-top: 1.25rem; }
+    .llm-cat-card {
+      background: var(--surface);
+      border: 1px solid rgba(108,99,255,.2);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .llm-cat-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+    .llm-cat-name { font-size: .82rem; font-weight: 700; color: var(--accent2); margin-bottom: .35rem; }
+    .llm-cat-desc { font-size: .75rem; color: var(--text-muted); line-height: 1.5; margin-bottom: .6rem; }
+    .llm-cat-count { font-size: .72rem; font-weight: 600; color: var(--accent); }
+    .llm-sample { font-size: .72rem; color: #8891b0; font-style: italic; margin-top: .4rem; line-height: 1.45;
+      border-left: 2px solid rgba(108,99,255,.3); padding-left: .6rem; }
+
+
+    /* ── Alarm banner ── */
+    .alarm-banner {
+      background: linear-gradient(135deg, rgba(255,107,107,.12), rgba(255,193,7,.08));
+      border: 1px solid rgba(255,107,107,.35);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem;
+    }
+    .alarm-icon { font-size: 2rem; color: var(--negative); line-height: 1; }
+    .alarm-body { flex: 1; min-width: 260px; }
+    .alarm-headline { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
+    .alarm-sub { font-size: .82rem; color: var(--text-muted); line-height: 1.45; }
+    .alarm-right { display: flex; align-items: center; }
+    .alarm-kpi-row { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+    .alarm-kpi { text-align: center; min-width: 90px; }
+    .alarm-kpi-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: .25rem; }
+    .alarm-kpi-val { font-size: 1.6rem; font-weight: 800; line-height: 1.1; color: var(--text); }
+    .alarm-kpi-val.danger { color: var(--negative); }
+    .alarm-kpi-sub { font-size: .7rem; color: var(--text-muted); margin-top: .2rem; }
+    .alarm-arrow { font-size: 1.2rem; color: var(--text-muted); }
+
+    /* ── Prioritised Action Plan ── */
+    .action-group { margin-bottom: 1.25rem; }
+    .action-group:last-child { margin-bottom: 0; }
+    .action-group-label {
+      display: inline-block; font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: 2px 10px; border-radius: 999px; border: 1px solid; margin-bottom: .6rem;
+    }
+    .action-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .action-table th {
+      text-align: left; padding: .5rem .75rem; font-size: .72rem;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em;
+      border-bottom: 1px solid var(--border);
+    }
+    .action-table td { padding: .65rem .75rem; border-bottom: 1px solid rgba(42,48,69,.5); vertical-align: middle; }
+    .action-num { font-weight: 800; width: 28px; }
+    .action-text { font-weight: 600; color: var(--text); }
+    .action-owner { color: var(--accent2); font-size: .78rem; white-space: nowrap; }
+    .action-why { color: var(--text-muted); font-size: .78rem; }
+
+    /* ── Version table ── */
+    .v-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .v-table th {
+      text-align: left; padding: .5rem .75rem; font-size: .72rem;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em;
+      border-bottom: 1px solid var(--border);
+    }
+    .v-table td { padding: .6rem .75rem; border-bottom: 1px solid rgba(42,48,69,.4); }
+    .v-ver { font-weight: 600; color: var(--accent); }
+    .v-row-bad { background: rgba(255,107,107,.08); }
+    .danger { color: var(--negative); font-weight: 700; }
+
+    /* ── Complaint cards ── */
+    .complaint-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: .85rem 1.1rem; margin-bottom: .75rem;
+      transition: border-color .2s;
+    }
+    .complaint-card:hover { border-color: var(--negative); }
+    .complaint-card:last-child { margin-bottom: 0; }
+    .complaint-meta { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: .4rem; font-size: .75rem; }
+    .complaint-stars { color: var(--negative); font-weight: 700; }
+    .complaint-tag {
+      background: rgba(255,107,107,.15); color: var(--negative);
+      padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: .7rem;
+    }
+    .complaint-thumbs { color: var(--accent4); font-weight: 600; }
+    .complaint-ver { color: var(--text-muted); }
+    .complaint-replied { color: var(--positive); font-size: .72rem; }
+    .complaint-unreplied { color: var(--negative); font-size: .72rem; }
+    .complaint-text { font-size: .82rem; color: #c5c9e0; line-height: 1.5; font-style: italic; }
+
     /* ── Responsive ── */
     @media(max-width: 600px) {
       main { padding: 1rem; }
@@ -287,132 +395,378 @@
   <!-- Controls -->
   <div class="controls">
     <div>
-      <label for="numReviews">Reviews to fetch</label>
-      <input type="number" id="numReviews" value="200" min="10" max="500" step="10" style="width:90px" />
-    </div>
-    <div>
-      <label for="sortSelect">Sort by</label>
-      <select id="sortSelect">
-        <option value="newest">Newest</option>
-        <option value="rating">Rating</option>
-        <option value="helpfulness">Helpfulness</option>
+      <label for="daysSelect">Window (days)</label>
+      <select id="daysSelect">
+        <option value="7">7 days</option>
+        <option value="14">14 days</option>
+        <option value="30" selected>30 days</option>
+        <option value="90">90 days</option>
       </select>
     </div>
     <div style="display:flex;align-items:flex-end;gap:.5rem">
-      <button class="btn btn-primary" id="fetchBtn">⬇ Fetch Reviews</button>
+      <button class="btn btn-primary" id="fetchBtn">⬇ Fetch Live Reviews</button>
     </div>
     <div id="fetchStatus" style="display:flex;align-items:flex-end;font-size:.8rem;color:var(--text-muted)"></div>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card accent1">
-      <div class="stat-label">Overall Rating</div>
-      <div class="stat-value" id="statRating">—</div>
-      <div class="stat-sub" id="statRatingsTotal">Fetch reviews to populate</div>
-    </div>
-    <div class="stat-card accent2">
-      <div class="stat-label">Positive Reviews</div>
-      <div class="stat-value" id="statPositive">—</div>
-      <div class="stat-sub">4–5 ★</div>
-    </div>
-    <div class="stat-card accent3">
-      <div class="stat-label">Negative Reviews</div>
-      <div class="stat-value" id="statNegative">—</div>
-      <div class="stat-sub">1–2 ★</div>
-    </div>
-    <div class="stat-card accent4">
-      <div class="stat-label">Neutral Reviews</div>
-      <div class="stat-value" id="statNeutral">—</div>
-      <div class="stat-sub">3 ★</div>
-    </div>
-    <div class="stat-card accent1">
-      <div class="stat-label">Total Fetched</div>
-      <div class="stat-value" id="statTotal">—</div>
-      <div class="stat-sub">this session</div>
+    <div style="margin-left:auto;display:flex;gap:.75rem;align-items:flex-end">
+      <button class="btn btn-secondary" id="dlCSV" disabled>⬇ CSV</button>
+      <button class="btn btn-secondary" id="dlMD"  disabled>⬇ Report (.md)</button>
     </div>
   </div>
 
-  <!-- Charts row -->
-  <div class="grid-2">
-    <!-- Theme breakdown -->
+  <!-- ① ALARM BANNER — the single most important number -->
+  <div id="alarmBanner" style="display:none" class="alarm-banner">
+    <div class="alarm-icon">⚠</div>
+    <div class="alarm-body">
+      <div class="alarm-headline" id="alarmHeadline">Store rating vs. recent window</div>
+      <div class="alarm-sub" id="alarmSub"></div>
+    </div>
+    <div class="alarm-right">
+      <div class="alarm-kpi-row">
+        <div class="alarm-kpi">
+          <div class="alarm-kpi-label">Store Rating</div>
+          <div class="alarm-kpi-val" id="kpiStore">—</div>
+          <div class="alarm-kpi-sub" id="kpiStoreSub"></div>
+        </div>
+        <div class="alarm-arrow">→</div>
+        <div class="alarm-kpi">
+          <div class="alarm-kpi-label">Window Avg</div>
+          <div class="alarm-kpi-val danger" id="kpiWindow">—</div>
+          <div class="alarm-kpi-sub" id="kpiWindowSub"></div>
+        </div>
+        <div class="alarm-kpi">
+          <div class="alarm-kpi-label">Low-Star Share</div>
+          <div class="alarm-kpi-val danger" id="kpiLowShare">—</div>
+          <div class="alarm-kpi-sub">1–2★ this window</div>
+        </div>
+        <div class="alarm-kpi">
+          <div class="alarm-kpi-label">Reply Rate</div>
+          <div class="alarm-kpi-val danger" id="kpiReply">—</div>
+          <div class="alarm-kpi-sub">on 1–2★ reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② PRIORITISED ACTION PLAN -->
+  <div id="actionSection" style="display:none" class="panel" style="margin-bottom:2rem">
+    <div class="panel-title">🎯 <span>Prioritised Action Plan</span>
+      <span style="margin-left:auto;font-size:.72rem;font-weight:400;color:var(--text-muted);text-transform:none">Generated from live review data</span>
+    </div>
+    <div id="actionTable"></div>
+  </div>
+
+  <!-- ③ TWO-COLUMN: WHY RATINGS ARE LOW + VERSION REGRESSION -->
+  <div class="grid-2" id="analysisGrid" style="display:none">
+    <!-- Root causes -->
     <div class="panel">
-      <div class="panel-title">🏷 <span>Top Themes</span></div>
+      <div class="panel-title">📉 <span>Why People Rate Low</span>
+        <span style="margin-left:auto;font-size:.72rem;font-weight:400;color:var(--text-muted);text-transform:none">1–2★ reviews only</span>
+      </div>
       <div id="themeChart"><div class="placeholder">Fetch reviews to see theme breakdown</div></div>
     </div>
 
-    <!-- Sentiment donut -->
+    <!-- Version regression -->
     <div class="panel">
-      <div class="panel-title">😊 <span>Sentiment Distribution</span></div>
-      <div id="donutWrap">
-        <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140">
-          <circle cx="70" cy="70" r="55" fill="none" stroke="var(--surface2)" stroke-width="22"/>
-          <circle id="donutPos" cx="70" cy="70" r="55" fill="none" stroke="var(--positive)" stroke-width="22"
-                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
-          <circle id="donutNeu" cx="70" cy="70" r="55" fill="none" stroke="var(--neutral)" stroke-width="22"
-                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
-          <circle id="donutNeg" cx="70" cy="70" r="55" fill="none" stroke="var(--negative)" stroke-width="22"
-                  stroke-dasharray="0 346" stroke-linecap="round" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .6s"/>
-          <text x="70" y="74" text-anchor="middle" fill="var(--text)" font-size="18" font-weight="800" font-family="Inter,sans-serif" id="donutCenter">—</text>
-        </svg>
-        <div class="donut-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--positive)"></div><span id="legPos">Positive (4–5★): —</span></div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--neutral)"></div><span id="legNeu">Neutral (3★): —</span></div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--negative)"></div><span id="legNeg">Negative (1–2★): —</span></div>
-        </div>
+      <div class="panel-title">🔴 <span>Release Health</span>
+        <span style="margin-left:auto;font-size:.72rem;font-weight:400;color:var(--text-muted);text-transform:none">low-star % by version</span>
       </div>
-
-      <!-- Rating dist -->
-      <div style="margin-top:1.5rem">
-        <div class="panel-title" style="margin-bottom:.75rem">⭐ <span>Rating Distribution</span></div>
-        <div id="ratingDist"><div class="placeholder" style="padding:1rem">—</div></div>
-      </div>
+      <div id="versionTable"><div class="placeholder">—</div></div>
     </div>
   </div>
 
-  <!-- Download row -->
-  <div class="download-row">
-    <button class="btn btn-secondary" id="dlCSV" disabled>⬇ Download CSV</button>
-    <button class="btn btn-secondary" id="dlMD"  disabled>⬇ Download Report (.md)</button>
+  <!-- ④ EVIDENCE — most-endorsed complaints -->
+  <div id="complaintsSection" style="display:none" class="panel">
+    <div class="panel-title">💬 <span>Top Complaints by User Votes</span>
+      <span style="margin-left:auto;font-size:.72rem;font-weight:400;color:var(--text-muted);text-transform:none">most-thumbed 1–2★ reviews</span>
+    </div>
+    <div id="topComplaints"></div>
   </div>
 
-  <!-- Chat -->
+  <!-- ⑤ LLM Dynamic Categories Panel -->
+  <div class="llm-panel" id="llmPanel" style="display:none">
+    <div class="panel-title" style="margin-bottom:.5rem">
+      🤖 <span>AI-Discovered Categories</span>
+      <span id="llmBadge" class="llm-badge loading" style="margin-left:.75rem">Analysing…</span>
+      <span id="llmModel" style="margin-left:auto;font-size:.68rem;color:var(--text-muted)"></span>
+    </div>
+    <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.75rem">
+      Tier 2: Groq LLM scans the <strong style="color:var(--text)">"Other"</strong> bucket for emerging issues not caught by keyword rules — updated live on every fetch.
+    </div>
+    <div id="llmCatGrid" class="llm-cat-grid"></div>
+  </div>
+
+  <!-- ⑥ CHAT — Ask the data -->
   <div class="chat-wrap">
     <div class="chat-header">
-      <div class="chat-header-icon">🤖</div>
+      <div class="chat-header-icon">💬</div>
       <div>
-        <h2>Review Intelligence Chat</h2>
-        <p>Ask questions about the fetched reviews — themes, quotes, trends, recommendations</p>
+        <h2>Ask the Data</h2>
+        <p>Ask anything about the fetched reviews — themes, quotes, version issues, reply rate</p>
       </div>
     </div>
     <div id="chatMessages">
-      <div class="msg bot">👋 Hi! Fetch reviews first, then ask me anything — e.g. <em>"What do users complain about most?"</em></div>
+      <div class="msg bot">👋 Fetch reviews first, then ask me anything — e.g. <em>"What is the top complaint?"</em> or <em>"Which version is worst?"</em></div>
     </div>
     <div class="quick-btns">
       <button class="quick-btn" data-q="What is the top complaint?">Top complaint</button>
-      <button class="quick-btn" data-q="Show me positive highlights">Positive highlights</button>
-      <button class="quick-btn" data-q="What themes appear most?">Theme breakdown</button>
-      <button class="quick-btn" data-q="Give me 3 actionable recommendations for the product team">Recommendations</button>
+      <button class="quick-btn" data-q="How are our ratings?">Rating summary</button>
+      <button class="quick-btn" data-q="Which version is worst?">Worst version</button>
+      <button class="quick-btn" data-q="What is the reply rate?">Reply rate</button>
       <button class="quick-btn" data-q="What do users say about GPS or tracking?">GPS issues</button>
-      <button class="quick-btn" data-q="Summarise the most recent 10 reviews">Recent summary</button>
+      <button class="quick-btn" data-q="How many stars needed to reach 4.5?">Stars needed</button>
     </div>
     <div class="chat-input-row">
       <input type="text" id="chatInput" placeholder="Ask about the reviews…" />
-      <button class="btn btn-primary" id="chatSend">Send</button>
+      <button class="btn btn-primary" id="chatSend">Ask</button>
     </div>
-  </div>
-
-  <!-- Reviews list -->
-  <div class="panel">
-    <div class="reviews-header">
-      <div class="panel-title" style="margin:0">📋 <span>Review Explorer</span></div>
-      <input type="text" id="reviewSearch" placeholder="Search reviews…" />
-    </div>
-    <div id="reviewList"><div class="placeholder">No reviews yet — click "Fetch Reviews" above.</div></div>
   </div>
 
 </main>
 
-<script src="analyze.js"></script>
+<script type="module">
+import { analyze, starsNeeded, report, answer, analyzeHybrid } from './analyze.js';
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let DATA = null, A = null;
+const pct  = x => Math.round(x * 100) + "%";
+const $    = id => document.getElementById(id);
+
+// ─── Fetch ────────────────────────────────────────────────────────────────────
+$("fetchBtn").addEventListener("click", async () => {
+  const days = parseInt($("daysSelect")?.value || 30);
+  $("fetchBtn").disabled = true;
+  $("fetchStatus").textContent = "Fetching live reviews from Google Play…";
+  try {
+    const resp = await fetch(`/api/fetch?days=${days}`);
+    if (!resp.ok) throw new Error(await resp.text());
+    DATA = await resp.json();
+    A    = analyze(DATA);
+    renderAll(A);
+    $("fetchedAt").textContent = `Live · ${DATA.reviews.length} reviews · ${days}d window · ${new Date(DATA.fetchedAt).toLocaleTimeString()}`;
+    $("fetchStatus").textContent = "";
+    runLLMTier();
+  } catch (e) {
+    $("fetchStatus").textContent = "Error: " + e.message;
+  } finally {
+    $("fetchBtn").disabled = false;
+  }
+});
+
+// ─── Render all ───────────────────────────────────────────────────────────────
+function renderAll(a) {
+  renderAlarm(a);
+  renderActionPlan(a);
+  renderThemes(a);
+  renderVersions(a);
+  renderTopComplaints(a);
+  $("dlCSV").disabled = false;
+  $("dlMD").disabled  = false;
+  $("analysisGrid").style.display    = "";
+  $("complaintsSection").style.display = "";
+  $("actionSection").style.display   = "";
+}
+
+// ① Alarm banner
+function renderAlarm(a) {
+  const gap = (DATA.score - a.avg).toFixed(2);
+  $("alarmBanner").style.display = "";
+  $("kpiStore").textContent   = DATA.score?.toFixed(2) + "★";
+  $("kpiStoreSub").textContent = (DATA.ratings||0).toLocaleString() + " lifetime ratings";
+  $("kpiWindow").textContent   = a.avg.toFixed(2) + "★";
+  $("kpiWindowSub").textContent = `${DATA.days}-day window · ${a.n} reviews`;
+  $("kpiLowShare").textContent = pct(a.lowShare);
+  $("kpiReply").textContent    = pct(a.replyRate);
+
+  const worstV = [...a.versions].filter(x => x.n >= 5).sort((x,y) => y.lowShare - x.lowShare)[0];
+  $("alarmHeadline").textContent = gap > 0
+    ? `⚠ Rating gap: ${gap} points below store average — something changed recently`
+    : "✓ Window average matches store rating — no acute regression detected";
+  $("alarmSub").textContent = worstV
+    ? `Worst version in window: v${worstV.v} with ${pct(worstV.lowShare)} low-star share across ${worstV.n} reviews · Developer reply rate on 1–2★ reviews: ${pct(a.replyRate)}`
+    : `Developer reply rate on 1–2★: ${pct(a.replyRate)} · ${a.n} reviews analysed`;
+}
+
+// ② Prioritised action plan
+function renderActionPlan(a) {
+  const worstV    = [...a.versions].filter(x => x.n >= 5).sort((x,y) => y.lowShare - x.lowShare)[0];
+  const topTheme  = a.themes[0];
+  const replyGap  = a.replyRate < 0.5;
+
+  const actions = [
+    {
+      priority: "Today",
+      color: "var(--negative)",
+      items: [
+        worstV && { action: `Audit v${worstV.v} — ${pct(worstV.lowShare)} low-star share (${worstV.n} reviews). Hotfix or rollback.`, owner: "Engineering / Release", why: "Highest-impact single change" },
+        replyGap && { action: `Respond to all open 1–2★ reviews (current reply rate: ${pct(a.replyRate)})`, owner: "Support / Ops", why: "Zero engineering needed — directly converts negatives to higher ratings" },
+      ].filter(Boolean),
+    },
+    {
+      priority: "This week",
+      color: "var(--neutral)",
+      items: [
+        topTheme && { action: `Fix: "${topTheme[0]}" — top issue in ${pct(topTheme[1]/a.low.length)} of 1–2★ reviews`, owner: "Engineering", why: "Biggest theme by volume" },
+        { action: "Add skip/later option to any unskippable post-ride in-app rating modal", owner: "Product / Eng", why: "Eliminates retaliatory 1★ reviews" },
+        { action: "Add post-update launch integrity check with guided cache-clear fallback", owner: "Engineering", why: "Silent crash on update → 1★ review with no recourse" },
+      ],
+    },
+    {
+      priority: "This month",
+      color: "var(--accent2)",
+      items: [
+        { action: "Review GPS / ETA polling frequency — inaccurate ETAs cause missed cabs", owner: "Engineering", why: "10% of low-star reviews mention tracking" },
+        { action: "Cache active trip details locally for offline use (basement parking, metro)", owner: "Engineering", why: "App unusable without network during boarding" },
+        { action: `Set release quality gate: block rollout when low-star share > 20% after 50+ reviews`, owner: "Engineering / Release", why: "Prevents regressions reaching full user base" },
+        { action: "Set up automated Play Store monitoring on this dashboard (recurring fetch)", owner: "Ops / Eng", why: "Answers 'how are our ratings?' on demand, forever" },
+      ],
+    },
+  ];
+
+  let html = "";
+  for (const group of actions) {
+    if (!group.items.length) continue;
+    html += `<div class="action-group">
+      <div class="action-group-label" style="border-color:${group.color};color:${group.color}">${group.priority}</div>
+      <table class="action-table">
+        <thead><tr><th>#</th><th>Action</th><th>Owner</th><th>Why first</th></tr></thead>
+        <tbody>`;
+    group.items.forEach((item, i) => {
+      html += `<tr>
+        <td class="action-num" style="color:${group.color}">${i+1}</td>
+        <td class="action-text">${item.action}</td>
+        <td class="action-owner">${item.owner}</td>
+        <td class="action-why">${item.why}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+  $("actionTable").innerHTML = html;
+}
+
+// ③ Theme bars
+function renderThemes(a) {
+  const tc  = $("themeChart");
+  tc.innerHTML = "";
+  const max = a.themes[0]?.[1] || 1;
+  a.themes.forEach(([k, v]) => {
+    const w = Math.round((v / max) * 100);
+    tc.innerHTML += `<div class="theme-bar">
+      <div class="theme-bar-label"><span>${k}</span><span>${v} · ${pct(v/a.low.length)}</span></div>
+      <div class="theme-bar-track"><div class="theme-bar-fill" style="width:${w}%"></div></div>
+    </div>`;
+  });
+}
+
+// ④ Version table
+function renderVersions(a) {
+  const SIGNAL = s => s >= .3 ? "🔴 Regression" : s >= .2 ? "🟡 Elevated" : s >= .1 ? "🟢 Acceptable" : "🟢 Clean";
+  let html = `<table class="v-table">
+    <thead><tr><th>Version</th><th>Reviews</th><th>Low-star %</th><th>Signal</th></tr></thead><tbody>`;
+  a.versions.forEach(x => {
+    const hi = x.lowShare >= .3;
+    html += `<tr class="${hi ? "v-row-bad" : ""}">
+      <td class="v-ver">v${x.v}</td>
+      <td>${x.n}</td>
+      <td class="${hi ? "danger" : ""}">${pct(x.lowShare)}</td>
+      <td>${SIGNAL(x.lowShare)}</td>
+    </tr>`;
+  });
+  html += "</tbody></table>";
+  $("versionTable").innerHTML = html;
+}
+
+// ⑤ Top complaints evidence
+function renderTopComplaints(a) {
+  const el = $("topComplaints");
+  el.innerHTML = "";
+  const top = [...a.low].sort((x,y) => y.thumbs - x.thumbs).slice(0,5);
+  top.forEach(r => {
+    el.innerHTML += `<div class="complaint-card">
+      <div class="complaint-meta">
+        <span class="complaint-stars">${"★".repeat(r.score)}${"☆".repeat(5-r.score)}</span>
+        <span class="complaint-tag">${r.theme}</span>
+        ${r.thumbs > 0 ? `<span class="complaint-thumbs">👍 ${r.thumbs} found helpful</span>` : ""}
+        ${r.version ? `<span class="complaint-ver">v${r.version}</span>` : ""}
+        ${r.replied ? `<span class="complaint-replied">✓ Developer replied</span>` : `<span class="complaint-unreplied">✗ No reply</span>`}
+      </div>
+      <div class="complaint-text">"${r.text?.slice(0, 240) || "(no text)"}"</div>
+    </div>`;
+  });
+}
+
+// ─── LLM Tier 2 ───────────────────────────────────────────────────────────────
+async function runLLMTier() {
+  if (!DATA) return;
+  $("llmPanel").style.display = "block";
+  $("llmBadge").className = "llm-badge loading";
+  $("llmBadge").textContent = "Analysing 'Other' bucket…";
+  $("llmCatGrid").innerHTML = "";
+
+  const result = await analyzeHybrid(DATA);
+
+  if (result.llmStatus === "active" && result.llm.length) {
+    $("llmBadge").className = "llm-badge active";
+    $("llmBadge").textContent = `✓ ${result.llm.length} new categories found`;
+    $("llmModel").textContent  = result.model ? `via ${result.model}` : "";
+    result.llm.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "llm-cat-card";
+      card.innerHTML = `
+        <div class="llm-cat-name">🏷 ${cat.name}</div>
+        <div class="llm-cat-desc">${cat.description || ""}</div>
+        <div class="llm-cat-count">${cat.count} review${cat.count !== 1 ? "s" : ""}</div>
+        ${(cat.samples||[]).map(s => `<div class="llm-sample">"${s}…"</div>`).join("")}
+      `;
+      $("llmCatGrid").appendChild(card);
+    });
+  } else if (result.llmStatus === "not-needed") {
+    $("llmPanel").style.display = "none";
+  } else if (result.llmStatus === "no-key") {
+    $("llmBadge").className = "llm-badge no-key";
+    $("llmBadge").textContent = "⚠ GROQ_API_KEY not set — regex active";
+    $("llmCatGrid").innerHTML = `<div style="font-size:.8rem;color:var(--text-muted)">Add your Groq key to <code>.env</code>: <code>GROQ_API_KEY=gsk_...</code> then restart the server.</div>`;
+  } else {
+    $("llmBadge").className = "llm-badge fallback";
+    $("llmBadge").textContent = "⚡ Fallback: regex active";
+    $("llmCatGrid").innerHTML = `<div style="font-size:.75rem;color:var(--text-muted)">${result.fallbackReason || "LLM unavailable"}</div>`;
+  }
+}
+
+// ─── Downloads ────────────────────────────────────────────────────────────────
+$("dlCSV").addEventListener("click", () => {
+  if (!A) return;
+  const rows = A.revs.map(r => [r.at?.slice(0,10), r.score, r.version||"", r.theme, r.replied, r.thumbs, `"${(r.text||"").replace(/"/g,"'")}"`].join(","));
+  download("reviews.csv", ["date,score,version,theme,replied,thumbs,text", ...rows].join("\n"));
+});
+$("dlMD").addEventListener("click", () => { if (A && DATA) download("pulse-report.md", report(DATA, A)); });
+function download(name, content) {
+  Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([content])), download: name }).click();
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+const chatInput    = $("chatInput");
+const chatMessages = $("chatMessages");
+
+function addMsg(text, role) {
+  const m = document.createElement("div");
+  m.className = `msg ${role}`;
+  m.textContent = text;
+  chatMessages.appendChild(m);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+$("chatSend").addEventListener("click", () => {
+  const q = chatInput.value.trim();
+  if (!q) return;
+  addMsg(q, "user");
+  chatInput.value = "";
+  setTimeout(() => addMsg((A && DATA) ? answer(q, DATA, A) : "Fetch reviews first.", "bot"), 180);
+});
+chatInput.addEventListener("keydown", e => { if (e.key === "Enter") $("chatSend").click(); });
+document.querySelectorAll(".quick-btn").forEach(b =>
+  b.addEventListener("click", () => { chatInput.value = b.dataset.q; $("chatSend").click(); })
+);
+</script>
 </body>
 </html>
+

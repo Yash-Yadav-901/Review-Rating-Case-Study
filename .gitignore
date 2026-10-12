@@ -4,3 +4,4 @@ scratch_data.json
 fetch_data.mjs
 gen_samples.mjs
 .DS_Store
+.env
