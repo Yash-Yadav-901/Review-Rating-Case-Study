@@ -693,105 +693,6 @@
       line-height: 1.5;
     }
 
-    /* ── Review Explorer Feed ── */
-    .reviews-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-      padding-bottom: .85rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: .75rem;
-    }
-    #reviewSearch {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text);
-      padding: .45rem .85rem;
-      font-size: .83rem;
-      font-family: inherit;
-      outline: none;
-      width: 250px;
-      transition: border-color .15s;
-    }
-    #reviewSearch:focus {
-      border-color: var(--accent);
-    }
-    #reviewList {
-      display: grid;
-      gap: .85rem;
-      max-height: 540px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    #reviewList::-webkit-scrollbar { width: 5px; }
-    #reviewList::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
-    
-    .review-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.15rem;
-      transition: border-color .15s, box-shadow .15s;
-    }
-    .review-card:hover {
-      border-color: var(--border-sub);
-      box-shadow: var(--shadow-sm);
-    }
-    .review-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: .5rem;
-      margin-bottom: .45rem;
-    }
-    .review-author {
-      font-size: .82rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .review-date {
-      font-size: .74rem;
-      color: var(--text-muted);
-    }
-    .stars {
-      color: var(--warning);
-      font-size: .82rem;
-      letter-spacing: .08em;
-    }
-    .review-text {
-      font-size: .83rem;
-      color: var(--text);
-      line-height: 1.5;
-      margin-bottom: .6rem;
-    }
-    .review-tags {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: .4rem;
-    }
-    .tag {
-      font-size: .7rem;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: var(--surface-sub);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .tag.positive {
-      background: var(--success-soft);
-      color: var(--success-text);
-      border-color: var(--success-border);
-    }
-    .tag.negative {
-      background: var(--danger-soft);
-      color: var(--danger-text);
-      border-color: var(--danger-border);
-    }
 
     /* ── LLM Dynamic Categories Panel ── */
     .llm-panel {
@@ -1205,20 +1106,6 @@
     <div id="topComplaints"></div>
   </div>
 
-  <!-- ⑧ REVIEW EXPLORER (Full Live Searchable Feed) -->
-  <div id="explorerSection" style="display:none" class="panel">
-    <div class="reviews-header">
-      <div class="panel-title" style="margin:0">
-        <span class="panel-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        </span>
-        Review Explorer
-      </div>
-      <input type="text" id="reviewSearch" placeholder="Search reviews by keyword, version, theme…" />
-    </div>
-    <div id="reviewList"><div class="placeholder">Fetch reviews above to explore.</div></div>
-  </div>
-
   <!-- ⑨ CHAT: Ask the Review Data -->
   <div class="chat-wrap">
     <div class="chat-header">
@@ -1283,15 +1170,12 @@ function renderAll(a) {
   renderDonutAndDist(a);
   renderVersions(a);
   renderTopComplaints(a);
-  renderReviews(a.revs);
-
   $("dlCSV").disabled = false;
   $("dlMD").disabled  = false;
   $("analysisGrid").style.display      = "";
   $("versionSection").style.display    = "";
   $("complaintsSection").style.display = "";
   $("actionSection").style.display     = "";
-  $("explorerSection").style.display   = "";
 }
 
 // ① Alarm Banner
@@ -1490,38 +1374,6 @@ function renderTopComplaints(a) {
   });
 }
 
-// ⑧ Review Explorer
-function renderReviews(revs) {
-  const rl = $("reviewList");
-  rl.innerHTML = "";
-  revs.slice(0, 60).forEach(r => {
-    const sentiment = r.score >= 4 ? "positive" : r.score <= 2 ? "negative" : "neutral";
-    rl.innerHTML += `<div class="review-card">
-      <div class="review-card-top">
-        <div>
-          <div class="review-author">Play Store User</div>
-          <div class="stars">${"★".repeat(r.score)}${"☆".repeat(5 - r.score)}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="review-date">${r.at?.slice(0,10) || ""}</div>
-          ${r.version ? `<div style="font-size:.72rem;color:var(--text-sub);font-family:monospace">v${r.version}</div>` : ""}
-        </div>
-      </div>
-      <div class="review-text">${r.text?.slice(0, 260) || "(no text)"}</div>
-      <div class="review-tags">
-        <span class="tag ${sentiment}">${r.theme}</span>
-        ${r.thumbs > 0 ? `<span class="tag">👍 ${r.thumbs}</span>` : ""}
-        ${r.replied ? `<span class="tag positive">✓ Replied</span>` : ""}
-      </div>
-    </div>`;
-  });
-}
-
-$("reviewSearch").addEventListener("input", e => {
-  if (!A) return;
-  const q = e.target.value.toLowerCase();
-  renderReviews(q ? A.revs.filter(r => r.text?.toLowerCase().includes(q) || r.theme?.toLowerCase().includes(q)) : A.revs);
-});
 
 // ─── LLM Tier 2 (openai/gpt-oss-120b) ─────────────────────────────────────────
 async function runLLMTier() {
