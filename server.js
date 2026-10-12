@@ -103,8 +103,8 @@ app.post("/api/llm-classify", async (req, res) => {
   try {
     const groq = new Groq({ apiKey });
 
-    // Send at most 80 reviews to avoid token limits
-    const sample = reviews.slice(0, 80).map((r, i) => `${i + 1}. [${r.score}★] ${r.text}`).join("\n");
+    // Send at most 50 reviews and trim text length to keep reasoning token budget well within bounds
+    const sample = reviews.slice(0, 50).map((r, i) => `${i + 1}. [${r.score}★] ${(r.text || "").slice(0, 200)}`).join("\n");
 
     const prompt = `You are analyzing Google Play Store reviews for MoveInSync, a B2B employee commute app.
 
@@ -133,11 +133,11 @@ Format:
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-120b",
       messages: [
-        { role: "system", content: "You are an analytical assistant that classifies user reviews and outputs strictly valid JSON." },
+        { role: "system", content: "You are an analytical assistant that classifies user reviews and outputs strictly valid JSON. Keep reasoning concise and output only the JSON schema requested." },
         { role: "user", content: prompt }
       ],
       temperature: 0.2,
-      max_tokens: 1024,
+      max_tokens: 4096,
       response_format: { type: "json_object" },
     });
 
