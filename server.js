@@ -4,6 +4,11 @@ import gplay from "google-play-scraper";
 import Groq from "groq-sdk";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.resolve(__dirname, "public");
 
 // ── Load .env manually (no extra dependency needed if dotenv absent) ──────────
 if (existsSync(".env")) {
@@ -17,8 +22,16 @@ if (existsSync(".env")) {
 }
 
 const app = express();
-app.use(express.static("public"));
+app.use(express.static(publicDir));
+app.use(express.static(path.resolve(process.cwd(), "public")));
 app.use(express.json());
+
+// Explicit root route for Vercel serverless deployment
+app.get("/", (req, res) => {
+  const file = path.join(publicDir, "index.html");
+  if (existsSync(file)) return res.sendFile(file);
+  res.sendFile(path.resolve(process.cwd(), "public", "index.html"));
+});
 
 const APP_ID_OK = /^[A-Za-z0-9_.]{3,100}$/;   // basic input validation
 const cache    = new Map();                     // 10-minute cache, be polite to Google
